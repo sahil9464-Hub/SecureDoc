@@ -1,0 +1,508 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+/* =========================
+   LOGIN / REGISTER
+========================= */
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+
+    background:
+        radial-gradient(circle at top left, #dbeafe 0, transparent 35%),
+        radial-gradient(circle at bottom right, #e0e7ff 0, transparent 35%),
+        #f8fafc;
+}
+
+.auth-card {
+    width: 420px;
+    max-width: 100%;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 18px;
+
+    box-shadow:
+        0 20px 45px rgba(15, 23, 42, 0.10),
+        0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+/* Brand */
+
+.brand-icon {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+    border-radius: 14px;
+
+    font-size: 24px;
+}
+
+.auth-card h1 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 6px;
+}
+
+.tagline {
+    text-align: center;
+    color: #2563eb;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+/* Form */
+
+.auth-card h2 {
+    color: #0f172a;
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.form-description {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 22px;
+}
+
+.auth-card label {
+    display: block;
+    margin-bottom: 7px;
+
+    color: #334155;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.auth-card input {
+    width: 100%;
+    height: 46px;
+
+    padding: 0 13px;
+
+    margin-bottom: 17px;
+
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #0f172a;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.auth-card input:focus {
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+/* Password */
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container input {
+    padding-right: 48px;
+}
+
+.password-container .password-toggle {
+    position: absolute;
+
+    right: 10px;
+    top: 0;
+
+    width: 36px;
+    height: 46px;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    background: transparent;
+
+    color: #64748b;
+
+    cursor: pointer;
+
+    font-size: 17px;
+}
+
+.password-container .password-toggle:hover {
+    background: transparent;
+    color: #2563eb;
+}
+
+/* Login / Register button */
+
+.auth-button {
+    width: 100%;
+
+    height: 46px;
+
+    margin-top: 4px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #2563eb;
+    color: white;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.1s ease;
+}
+
+.auth-button:hover {
+    background: #1d4ed8;
+}
+
+.auth-button:active {
+    transform: translateY(1px);
+}
+
+/* Messages */
+
+#loginMessage,
+#registerMessage {
+    margin-top: 12px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+/* Switch login/register */
+
+.switch {
+    text-align: center;
+
+    margin-top: 22px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+.switch span {
+    color: #2563eb;
+
+    cursor: pointer;
+
+    font-weight: 600;
+}
+
+.switch span:hover {
+    text-decoration: underline;
+}
+
+/* Security message */
+
+.security-note {
+    margin-top: 25px;
+    padding-top: 18px;
+
+    border-top: 1px solid #e2e8f0;
+
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard {
+    min-height: 100vh;
+}
+
+.dashboard-header {
+    background: #111827;
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-header h1 {
+    font-size: 28px;
+}
+
+.dashboard-header p {
+    margin-top: 5px;
+    color: #9ca3af;
+}
+
+.dashboard-header button {
+    background: #ef4444;
+}
+
+main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card {
+    background: white;
+    padding: 25px;
+    margin-bottom: 22px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.card h2 {
+    margin-bottom: 18px;
+    font-size: 20px;
+}
+
+/* =========================
+   UPLOAD
+========================= */
+
+#documentFile {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    margin-right: 10px;
+}
+
+#uploadMessage {
+    margin-top: 12px;
+    color: #374151;
+}
+
+/* =========================
+   DOCUMENT ITEMS
+========================= */
+
+.document-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #fafafa;
+}
+
+.document-item strong {
+    font-size: 16px;
+}
+
+.document-item p {
+    margin-top: 7px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.document-item button {
+    margin-top: 12px;
+    margin-right: 8px;
+}
+
+.document-item button:nth-child(2) {
+    background: #dc2626;
+}
+
+/* =========================
+   SHARE FORM
+========================= */
+
+.share-form {
+    margin-top: 15px;
+    padding: 18px;
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+.share-form h3 {
+    margin-bottom: 15px;
+}
+
+.share-form input {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    margin-top: 8px;
+}
+
+.share-form button {
+    margin-top: 10px;
+    margin-right: 8px;
+}
+
+/* =========================
+   AUDIT LOGS
+========================= */
+
+.log-item {
+    border-left: 4px solid #2563eb;
+    background: #f9fafb;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.log-item strong {
+    font-size: 14px;
+}
+
+.log-item p {
+    margin-top: 5px;
+    color: #4b5563;
+}
+
+.log-item small {
+    display: block;
+    margin-top: 6px;
+    color: #9ca3af;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .dashboard-header {
+        padding: 18px 20px;
+    }
+
+    .dashboard-header h1 {
+        font-size: 22px;
+    }
+
+    main {
+        padding: 0 12px;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    #documentFile {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .auth-card {
+        width: 90%;
+    }
+}
+
+/* =========================
+   DASHBOARD STATISTICS
+========================= */
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card h3 {
+    color: #6b7280;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.stat-card p {
+    font-size: 30px;
+    font-weight: bold;
+    color: #2563eb;
+}
+
+@media (max-width: 700px) {
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* =========================
+   DOCUMENT SEARCH
+========================= */
+
+#documentSearch {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+#documentSearch:focus {
+    border-color: #2563eb;
+}
+
+#documentSort {
+    padding: 11px;
+    margin-bottom: 18px;
+    margin-left: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px;
+    cursor: pointer;
+}

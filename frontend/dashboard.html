@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecureDoc - Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <header class="dashboard-header">
+            <div>
+                <h1>SecureDoc</h1>
+                <p>Secure Document Sharing Platform</p>
+            </div>
+
+            <button onclick="logout()">Logout</button>
+        </header>
+
+
+        <main>
+
+            <!-- Dashboard Statistics -->
+<section class="stats-container">
+
+    <div class="stat-card">
+        <h3>My Documents</h3>
+        <p id="documentCount">0</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Shared With Me</h3>
+        <p id="sharedCount">0</p>
+    </div>
+
+    <div class="stat-card">
+        <h3>Activities</h3>
+        <p id="activityCount">0</p>
+    </div>
+
+</section>
+
+            <!-- Upload -->
+            <section class="card">
+
+                <h2>Upload Document</h2>
+
+                <input type="file" id="documentFile">
+
+                <button onclick="uploadDocument()">
+                    Upload
+                </button>
+
+                <p id="uploadMessage"></p>
+
+            </section>
+
+
+            <!-- My Documents -->
+            <section class="card">
+                <h2>My Documents</h2>
+
+                <input
+                    type="text"
+                    id="documentSearch"
+                    placeholder="Search documents..."
+                    oninput="searchDocuments()"
+                >
+
+                <select id="documentSort" onchange="sortDocuments()">
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="nameAsc">Name A → Z</option>
+                    <option value="nameDesc">Name Z → A</option>
+                </select>
+
+                <div id="documentsList">
+                    <p>Loading documents...</p>
+                </div>
+            </section>
+
+
+            <!-- Shared With Me -->
+            <section class="card">
+
+                <h2>Shared With Me</h2>
+
+                <div id="sharedDocumentsList">
+                    <p>Loading shared documents...</p>
+                </div>
+
+            </section>
+
+
+            <!-- Audit Logs -->
+            <section class="card">
+
+                <h2>Activity Logs</h2>
+
+                <div id="auditLogs">
+                    <p>Loading activity...</p>
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>

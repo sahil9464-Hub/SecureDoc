@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SecureDoc - Secure Document Sharing</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="brand-icon">
+    <svg
+        width="28"
+        height="28"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
+        <path
+            d="M7 10V8C7 5.239 9.239 3 12 3C14.761 3 17 5.239 17 8V10"
+            stroke="#2563EB"
+            stroke-width="2"
+            stroke-linecap="round"
+        />
+
+        <rect
+            x="5"
+            y="10"
+            width="14"
+            height="11"
+            rx="2"
+            stroke="#2563EB"
+            stroke-width="2"
+        />
+
+        <circle
+            cx="12"
+            cy="15"
+            r="1.5"
+            fill="#2563EB"
+        />
+
+        <path
+            d="M12 16.5V18"
+            stroke="#2563EB"
+            stroke-width="2"
+            stroke-linecap="round"
+        />
+    </svg>
+</div>
+
+            <h1>SecureDoc</h1>
+
+            <p class="tagline">
+                Secure. Share. Control.
+            </p>
+
+            <p class="subtitle">
+                Secure Document Sharing Platform
+            </p>
+
+            <!-- LOGIN -->
+
+            <div id="loginSection">
+
+                <h2>Welcome Back</h2>
+
+                <p class="form-description">
+                    Sign in to access your documents
+                </p>
+
+                <label for="loginEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Enter your email"
+                >
+
+                <label for="loginPassword">
+                    Password
+                </label>
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('loginPassword', this)"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+                <button
+                    class="auth-button"
+                    onclick="login()"
+                >
+                    Login
+                </button>
+
+                <p id="loginMessage"></p>
+
+                <p class="switch">
+                    Don't have an account?
+                    <span onclick="showRegister()">
+                        Register
+                    </span>
+                </p>
+
+            </div>
+
+
+            <!-- REGISTER -->
+
+            <div
+                id="registerSection"
+                style="display: none;"
+            >
+
+                <h2>Create Account</h2>
+
+                <p class="form-description">
+                    Create your SecureDoc account
+                </p>
+
+                <label for="registerName">
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Enter your name"
+                >
+
+                <label for="registerEmail">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="Enter your email"
+                >
+
+                <label for="registerPassword">
+                    Password
+                </label>
+
+                <div class="password-container">
+
+                    <input
+                        type="password"
+                        id="registerPassword"
+                        placeholder="Create a password"
+                    >
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        onclick="togglePassword('registerPassword', this)"
+                    >
+                        👁
+                    </button>
+
+                </div>
+
+                <button
+                    class="auth-button"
+                    onclick="register()"
+                >
+                    Create Account
+                </button>
+
+                <p id="registerMessage"></p>
+
+                <p class="switch">
+                    Already have an account?
+                    <span onclick="showLogin()">
+                        Login
+                    </span>
+                </p>
+
+            </div>
+
+
+            <div class="security-note">
+                🛡️ Your documents are protected with secure authentication.
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+</body>
+
+</html>
