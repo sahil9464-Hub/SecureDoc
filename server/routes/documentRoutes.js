@@ -1,55 +1,30 @@
+
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
+const crypto = require("crypto");
 
 const Document = require("../models/Document");
 const authMiddleware = require("../middleware/authMiddleware");
 const createAuditLog = require("../utils/auditLogger");
+const supabase = require("../config/supabase");
 
 const router = express.Router();
 
-
-// ==========================================
-// UPLOAD DIRECTORY
-// ==========================================
-
-const uploadDir = path.join(__dirname, "../uploads");
-
-// Create uploads folder automatically if it doesn't exist
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+const bucket = process.env.SUPABASE_BUCKET;
 
 
 // ==========================================
 // MULTER STORAGE CONFIGURATION
 // ==========================================
 
-const storage = multer.diskStorage({
-
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-
-    filename: (req, file, cb) => {
-
-        const uniqueName =
-            Date.now() +
-            "-" +
-            Math.round(Math.random() * 1e9) +
-            path.extname(file.originalname);
-
-        cb(null, uniqueName);
-    }
-
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
     storage: storage,
 
     limits: {
-        fileSize: 5 * 1024 * 1024
+        fileSize: 50 * 1024 * 1024
     },
 
     fileFilter: (req, file, cb) => {
@@ -85,6 +60,8 @@ router.post(
 
     async (req, res) => {
 
+        let uploadedStoragePath = null;
+
         try {
 
             if (!req.file) {
@@ -93,17 +70,49 @@ router.post(
                 });
             }
 
+            const extension = path.extname(req.file.originalname);
+
+            const uniqueFilename =
+                Date.now() +
+                "-" +
+                crypto.randomUUID() +
+                extension;
+
+            const storagePath =
+                `${req.user.id}/${uniqueFilename}`;
+
+
+            // Upload file to Supabase
+            const { error: uploadError } = await supabase.storage
+                .from(bucket)
+                .upload(storagePath, req.file.buffer, {
+                    contentType: req.file.mimetype,
+                    upsert: false
+                });
+
+            if (uploadError) {
+                throw uploadError;
+            }
+
+            uploadedStoragePath = storagePath;
+
+
+            // Save document information in MongoDB
             const document = await Document.create({
 
-                filename: req.file.filename,
+                filename: uniqueFilename,
 
                 originalName: req.file.originalname,
 
-                filePath: req.file.path,
+                storagePath: storagePath,
 
                 uploadedBy: req.user.id
 
             });
+
+
+            // MongoDB record created successfully
+            uploadedStoragePath = null;
 
 
             // Create audit log
@@ -115,17 +124,51 @@ router.post(
             );
 
 
+            // Hide internal Supabase storage path
+            const safeDocument = document.toObject();
+
+            delete safeDocument.storagePath;
+
+
             res.status(201).json({
 
                 message: "Document uploaded successfully",
 
-                document
+                document: safeDocument
 
             });
 
         } catch (error) {
 
             console.log("Upload error:", error.message);
+
+
+            // Remove uploaded file if MongoDB creation failed
+            if (uploadedStoragePath) {
+
+                try {
+
+                    const { error: cleanupError } = await supabase.storage
+                        .from(bucket)
+                        .remove([uploadedStoragePath]);
+
+                    if (cleanupError) {
+                        console.log(
+                            "Storage cleanup error:",
+                            cleanupError.message
+                        );
+                    }
+
+                } catch (cleanupError) {
+
+                    console.log(
+                        "Storage cleanup error:",
+                        cleanupError.message
+                    );
+
+                }
+            }
+
 
             res.status(500).json({
 
@@ -157,7 +200,9 @@ router.get(
 
                 uploadedBy: req.user.id
 
-            }).sort({
+            })
+            .select("-storagePath")
+            .sort({
                 createdAt: -1
             });
 
@@ -176,9 +221,7 @@ router.get(
 
             res.status(500).json({
 
-                message: "Failed to fetch documents",
-
-                error: error.message
+                message: "Failed to fetch documents"
 
             });
 
@@ -220,12 +263,22 @@ router.get(
             }
 
 
-            // Check that the physical file exists
-            if (!fs.existsSync(document.filePath)) {
+            // Download file from Supabase
+            const { data, error } = await supabase.storage
+                .from(bucket)
+                .download(document.storagePath);
+
+
+            if (error || !data) {
+
+                console.log(
+                    "Supabase download error:",
+                    error?.message
+                );
 
                 return res.status(404).json({
 
-                    message: "File no longer exists on the server"
+                    message: "File could not be found in storage"
 
                 });
 
@@ -246,26 +299,21 @@ router.get(
             );
 
 
-            res.download(
-
-                document.filePath,
-
-                document.originalName,
-
-                (error) => {
-
-                    if (error) {
-
-                        console.log(
-                            "Download error:",
-                            error.message
-                        );
-
-                    }
-
-                }
-
+            // Convert downloaded file into a buffer
+            const fileBuffer = Buffer.from(
+                await data.arrayBuffer()
             );
+
+
+            // Send file to user
+            res.setHeader(
+                "Content-Type",
+                "application/octet-stream"
+            );
+
+            res.attachment(document.originalName);
+
+            res.send(fileBuffer);
 
         } catch (error) {
 
@@ -276,9 +324,7 @@ router.get(
 
             res.status(500).json({
 
-                message: "Download failed",
-
-                error: error.message
+                message: "Download failed"
 
             });
 
@@ -320,15 +366,18 @@ router.delete(
             }
 
 
-            // Delete physical file
-            if (fs.existsSync(document.filePath)) {
+            // Delete file from Supabase
+            const { error: storageError } = await supabase.storage
+                .from(bucket)
+                .remove([document.storagePath]);
 
-                fs.unlinkSync(document.filePath);
 
+            if (storageError) {
+                throw storageError;
             }
 
 
-            // Delete database record
+            // Delete MongoDB record
             await Document.deleteOne({
 
                 _id: document._id
@@ -365,9 +414,7 @@ router.delete(
 
             res.status(500).json({
 
-                message: "Delete failed",
-
-                error: error.message
+                message: "Delete failed"
 
             });
 

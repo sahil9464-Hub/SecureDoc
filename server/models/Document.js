@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const documentSchema = new mongoose.Schema(
@@ -12,7 +13,7 @@ const documentSchema = new mongoose.Schema(
             required: true
         },
 
-        filePath: {
+        storagePath: {
             type: String,
             required: true
         },
