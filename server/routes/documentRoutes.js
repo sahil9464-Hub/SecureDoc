@@ -27,6 +27,7 @@ const upload = multer({
         fileSize: 50 * 1024 * 1024
     },
 
+
     fileFilter: (req, file, cb) => {
 
         const allowedTypes = [
@@ -36,16 +37,27 @@ const upload = multer({
             "text/plain"
         ];
 
-        if (allowedTypes.includes(file.mimetype)) {
+        const extension = path.extname(file.originalname).toLowerCase();
+
+        const isNotebook =
+            extension === ".ipynb" &&
+            [
+                "application/json",
+                "application/x-ipynb+json",
+                "application/octet-stream"
+            ].includes(file.mimetype);
+
+        if (allowedTypes.includes(file.mimetype) || isNotebook) {
             cb(null, true);
         } else {
             cb(
                 new Error(
-                    "Only PDF, PNG, JPG and TXT files are allowed"
+                    "Only PDF, PNG, JPG, TXT and IPYNB files are allowed"
                 )
             );
         }
     }
+
 });
 
 
@@ -68,6 +80,27 @@ router.post(
                 return res.status(400).json({
                     message: "No document uploaded"
                 });
+            }
+
+            // Validate Jupyter Notebook files
+            if (path.extname(req.file.originalname).toLowerCase() === ".ipynb") {
+
+                try {
+                    const notebook = JSON.parse(req.file.buffer.toString("utf8"));
+
+                    if (
+                        !Array.isArray(notebook.cells) ||
+                        !notebook.metadata ||
+                        !notebook.nbformat
+                    ) {
+                        throw new Error("Invalid notebook structure");
+                    }
+
+                } catch (error) {
+                    return res.status(400).json({
+                        message: "Invalid Jupyter Notebook file"
+                    });
+                }
             }
 
             const extension = path.extname(req.file.originalname);
@@ -201,10 +234,10 @@ router.get(
                 uploadedBy: req.user.id
 
             })
-            .select("-storagePath")
-            .sort({
-                createdAt: -1
-            });
+                .select("-storagePath")
+                .sort({
+                    createdAt: -1
+                });
 
 
             res.json({
